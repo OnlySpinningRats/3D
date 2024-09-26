@@ -14,6 +14,22 @@
     </style>
   </head>
   <body>
+    <button
+      id="playButton"
+      style="
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+      "
+    >
+      Tarantella
+    </button>
     <!-- Carica la versione non modulare di Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <!-- Carica il FBXLoader -->
@@ -106,6 +122,28 @@
       camera.position.x = 500;
       camera.position.y = 500;
       camera.position.z = 1000;
+
+      // Crea un AudioListener e lo associa alla camera
+      const listener = new THREE.AudioListener();
+      camera.add(listener);
+
+      // Crea un oggetto audio globale
+      const sound = new THREE.Audio(listener);
+
+      // Inizializza un AudioLoader per caricare il file audio
+      const audioLoader = new THREE.AudioLoader();
+
+      // Funzione per iniziare l'audio dopo un'azione dell'utente
+      document
+        .getElementById("playButton")
+        .addEventListener("click", function () {
+          audioLoader.load("Tarantella.mp3", function (buffer) {
+            sound.setBuffer(buffer);
+            sound.setLoop(true);
+            sound.setVolume(0.5);
+            sound.play(); // Inizia la riproduzione solo dopo l'azione dell'utente
+          });
+        });
 
       function animate() {
         requestAnimationFrame(animate);
