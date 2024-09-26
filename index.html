@@ -42,14 +42,14 @@
       const textureLoader = new THREE.TextureLoader();
 
       // Caricamento della texture PNG
-      const texture = textureLoader.load("models/rat.png");
+      const texture = textureLoader.load(rat.png");
 
       let model;
 
       // Loader per il file FBX
       const loader = new THREE.FBXLoader();
       loader.load(
-        "models/Rat.fbx", // Specifica il percorso del file FBX
+        "Rat.fbx", // Specifica il percorso del file FBX
         (fbx) => {
           // Aggiungi l'oggetto FBX alla scena
           model = fbx;
