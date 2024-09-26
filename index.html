@@ -11,12 +11,7 @@
       canvas {
         display: block;
       }
-    </style>
-  </head>
-  <body>
-    <button
-      id="playButton"
-      style="
+      #playButton {
         background-color: red;
         color: white;
         border: none;
@@ -26,10 +21,19 @@
         position: fixed;
         bottom: 20px;
         left: 20px;
-      "
-    >
-      Tarantella
-    </button>
+      }
+      @media (max-width: 600px) {
+        #playButton {
+          font-size: 14px; /* Riduci la dimensione del font */
+          padding: 8px 16px; /* Riduci il padding */
+          bottom: 10px; /* Posizione più alta */
+          left: 10px; /* Posizione più alta */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button id="playButton">Tarantella</button>
     <!-- Carica la versione non modulare di Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <!-- Carica il FBXLoader -->
