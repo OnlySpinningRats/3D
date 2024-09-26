@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rat</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Carica la versione non modulare di Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <!-- Carica il FBXLoader -->
+    <script src=" https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.min.js "></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js"></script>
+    <!-- Carica OrbitControls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.135.0/examples/js/controls/OrbitControls.js"></script>
+    <script>
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        5000
+      );
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // Aggiungi OrbitControls per muovere la telecamera
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true; // Abilita il damping
+      controls.dampingFactor = 0.05; // Imposta l'intensità del damping
+
+      // Inizializzazione del loader per la texture PNG
+      const textureLoader = new THREE.TextureLoader();
+
+      // Caricamento della texture PNG
+      const texture = textureLoader.load("models/rat.png");
+
+      let model;
+
+      // Loader per il file FBX
+      const loader = new THREE.FBXLoader();
+      loader.load(
+        "models/Rat.fbx", // Specifica il percorso del file FBX
+        (fbx) => {
+          // Aggiungi l'oggetto FBX alla scena
+          model = fbx;
+          scene.add(fbx);
+
+          // Crea un nuovo materiale con la texture
+          const newMaterial = new THREE.MeshBasicMaterial({ map: texture });
+
+          // Applica il nuovo materiale a tutti i mesh del modello
+          fbx.traverse(function (child) {
+            if (child.isMesh) {
+              child.material = newMaterial; // Sostituisce il materiale con uno nuovo
+              child.material.needsUpdate = true; // Forza l'aggiornamento del materiale
+            }
+          });
+        },
+        (xhr) => {
+          // Funzione per monitorare il progresso
+          console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        },
+        (error) => {
+          console.error("Error in the loading of the FBX file", error);
+        }
+      );
+
+      const light_x = new THREE.DirectionalLight(0xffffff, 0.1);
+      light_x.position.set(1, 0, 0).normalize();
+      scene.add(light_x);
+
+      const light_y = new THREE.DirectionalLight(0xffffff, 0.1);
+      light_y.position.set(0, 1, 0).normalize();
+      scene.add(light_y);
+
+      const light_x_neg = new THREE.DirectionalLight(0xffffff, 0.15);
+      light_x_neg.position.set(-1, 0, 0).normalize();
+      scene.add(light_x_neg);
+
+      const light_y_neg = new THREE.DirectionalLight(0xffffff, 0.15);
+      light_y_neg.position.set(0, -1, 0).normalize();
+      scene.add(light_y_neg);
+
+      const light_yz = new THREE.DirectionalLight(0xffffff, 0.3);
+      light_yz.position.set(0, 1, 1).normalize();
+      scene.add(light_yz);
+
+      const light_yz_neg = new THREE.DirectionalLight(0xffffff, 0.15);
+      light_yz_neg.position.set(0, -1, -1).normalize();
+      scene.add(light_yz_neg);
+
+      const light_xyz = new THREE.DirectionalLight(0xffffff, 0.1);
+      light_xyz.position.set(1, 1, 1).normalize();
+      scene.add(light_xyz);
+
+      camera.position.x = 500;
+      camera.position.y = 500;
+      camera.position.z = 1000;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        if (model) {
+          model.rotation.x += 0.01; // Ruota intorno all'asse X
+          model.rotation.y += 0.02; // Ruota intorno all'asse Y
+          model.rotation.z -= 0.01; // Ruota intorno all'asse Z
+        }
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
+    </script>
+  </body>
+</html>
